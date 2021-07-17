@@ -175,27 +175,19 @@ add_filter('kritter/calendar/format/time_span_start', function($format, $event) 
 	$is_same_ampm = ($event->start()->format('a') === $event->end()->format('a'));
 
 	if ($event->start()->minute === 0) {
-		return $is_same_ampm
-			? "g"
-			: "g a";
+		return $is_same_ampm ? "g" : "g a";
 	}
 
-	return $is_same_ampm
-		? "g:i"
-		: "g:i a";
+	return $is_same_ampm ? "g:i" : "g:i a";
 }, 10, 2);
 
 // time_span_end
 add_filter('kritter/calendar/format/time_span_end', function($format, $event) {
-	return $event->end()->minute === 0
-		? "g a"
-		: "g:i a";
+	return $event->end()->minute === 0 ? "g a" : "g:i a";
 
 	if ($event->end()->format('a') == $event->end()->format('a'))
 		return "g:i";
 
 	return "g:i a";
-
-	return 'c';
 }, 10, 2);
 ```
