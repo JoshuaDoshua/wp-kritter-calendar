@@ -39,9 +39,7 @@ add_filter('kritter/calendar/format/date', function($format, $kritter) {
 }, 10, 2);
 ```
 
----
-
-### `kritter/calendar/format/date_span`
+#### `kritter/calendar/format/date_span`
 
 All dates that are "n to n"
 
@@ -52,9 +50,7 @@ add_filter('kritter/calendar/format/date_span', function($format, $kritter) {
 }, 10, 2);
 ```
 
----
-
-### `kritter/calendar/format/date_span_start`
+#### `kritter/calendar/format/date_span_start`
 
 All first dates that are "N to n"
 
@@ -65,9 +61,7 @@ add_filter('kritter/calendar/format/date_span_start', function($format, $kritter
 }, 10, 2);
 ```
 
----
-
-### `kritter/calendar/format/date_span_end`
+#### `kritter/calendar/format/date_span_end`
 
 All last dates that are "n to N"
 
@@ -78,11 +72,9 @@ add_filter('kritter/calendar/format/date_span_end', function($format, $kritter) 
 }, 10, 2);
 ```
 
----
-
 ## Time Filters
 
-### `kritter/calendar/format/time`
+#### `kritter/calendar/format/time`
 
 All Times
 
@@ -93,9 +85,7 @@ add_filter('kritter/calendar/format/time', function($format, $kritter) {
 }, 10, 2);
 ```
 
----
-
-### `kritter/calendar/format/time/span`
+#### `kritter/calendar/format/time/span`
 
 All times that are "n to n"
 
@@ -106,9 +96,7 @@ add_filter('kritter/calendar/format/time_span', function($format, $kritter) {
 }, 10, 2);
 ```
 
----
-
-### `kritter/calendar/time_span_start`
+#### `kritter/calendar/time_span_start`
 
 All first times that are "N to n"
 
@@ -119,9 +107,7 @@ add_filter('kritter/calendar/format/time_span_start', function($format, $kritter
 }, 10, 2);
 ```
 
----
-
-### `kritter/calendar/format/time_span_end`
+#### `kritter/calendar/format/time_span_end`
 
 All last times that are "n to N"
 
@@ -131,8 +117,6 @@ add_filter('kritter/calendar/format/time_span_end', function($format, $kritter) 
 	// ...
 }, 10, 2);
 ```
-
----
 
 ## Schedule Filters
 
