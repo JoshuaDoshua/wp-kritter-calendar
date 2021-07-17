@@ -147,7 +147,7 @@ kritter/calendar/format/schedule/daily/list
 
 ## Common Format Filters
 
-### Time Spans
+### Common Time Spans
 
 Only show start am/pm in time span if they're different
 
