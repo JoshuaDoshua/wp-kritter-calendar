@@ -5,3 +5,4 @@
 	- "11:00 am - 2:00 pm (3 hours)"
 - [ ] explore overriding acf?
 - [ ] Better internationalization
+- [ ] Add a separator filter

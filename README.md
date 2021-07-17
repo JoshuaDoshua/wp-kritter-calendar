@@ -9,54 +9,138 @@
 - (php DateTime::format)[https://www.php.net/manual/en/datetime.format.php]
 - (Carbon)[https://carbon.nesbot.com/docs/]
 
-# Formatting Filters
+# DateTime Format Customization
 
-You can utilize Carbons many helpers to make customizing formatting fast and flexible.
+By default, this plugin uses the default date/time format from the WP admin. I've added a number of filters, with different specificities, that you can use to format how date/times look in different places. You can utilize Carbons many helpers to make customizing formatting fast and flexible.
 
-Filter Structure
+**Filter Structure**
 
-`kritter/calendar/format/{type}?/{contexts}`
+`kritter/calendar/format/TYPE(?_CONTEXT)`
 
-> All format filters accept $format and $object parameters
->
-> `$format` is the current format in the filter execution
-> `$object` is the \Kritter\Calendar\MODEL object and has a `$post_id` reference to the `\WP_Post`
+**Callback Arguments**
+
+- `$format` - the current format in the execution hierarchy
+- `$kritter` - the \Kritter\Calendar\MODEL class
+	- This contains a reference to the appropriate \WP_Post via `$kritter->post_id`
+	- But not the entire post object to prevent recusive overloading
 
 ## Date Filters
 
-```
-kritter/calendar/format/date
-kritter/calendar/format/date/span
-kritter/calendar/format/date/span/start
-kritter/calendar/format/date/span/end
+All Dates
 
+`kritter/calendar/format/date`
+
+```php
+<?php
+// *all* dates
+add_filter('kritter/calendar/format/date', function($format, $kritter) {
+	// ...
+}, 10, 2);
+```
+
+All dates that are "n to n"
+
+`kritter/calendar/format/date_span`
+
+```php
+<?php
+add_filter('kritter/calendar/format/date_span', function($format, $kritter) {
+	// ...
+}, 10, 2);
+```
+
+All first dates that are "N to n"
+
+`kritter/calendar/format/date_span_start`
+
+```php
+<?php
+add_filter('kritter/calendar/format/date_span_start', function($format, $kritter) {
+	// ...
+}, 10, 2);
+```
+
+All last dates that are "n to N"
+
+`kritter/calendar/format/date_span_end`
+
+```php
+<?php
+add_filter('kritter/calendar/format/date_span_end', function($format, $kritter) {
+	// ...
+}, 10, 2);
+```
+
+## Time Filters
+
+All Times
+
+`kritter/calendar/format/time`
+
+```php
+<?php
+add_filter('kritter/calendar/format/time', function($format, $kritter) {
+	// ...
+}, 10, 2);
+```
+
+All times that are "n to n"
+
+`kritter/calendar/format/time/span`
+
+```php
+<?php
+add_filter('kritter/calendar/format/time_span', function($format, $kritter) {
+	// ...
+}, 10, 2);
+```
+
+All first times that are "N to n"
+
+`kritter/calendar/time_span_start`
+
+```php
+<?php
+add_filter('kritter/calendar/format/time_span_start', function($format, $kritter) {
+	// ...
+}, 10, 2);
+```
+
+All last times that are "n to N"
+
+`kritter/calendar/format/time_span_end`
+
+```php
+<?php
+add_filter('kritter/calendar/format/time_span_end', function($format, $kritter) {
+	// ...
+}, 10, 2);
 ```
 
 ## Schedule Filters
 
 > These  filters inherit date filters because they are dates as well
+> 
+> TODO outline how date, date_span works here
+
+```php
+<?php
+// all date formats from a schedule
+// kritter/calendar/format/schedule
+add_filter('kritter/calendar/format/schedule', function($format, $kritter) {
+	// ...
+}, 10, 2);
+// kritter/calendar/format/schedule/start
+// kritter/calendar/format/schedule/end
+// kritter/calendar/format/schedule/list
 
 ```
-kritter/calendar/format/schedule
-kritter/calendar/format/schedule/start
-kritter/calendar/format/schedule/end
-kritter/calendar/format/schedule/list
 
 # TODO: recurrence specific?
 kritter/calendar/format/schedule/daily
 kritter/calendar/format/schedule/daily/start
 kritter/calendar/format/schedule/daily/end
 kritter/calendar/format/schedule/daily/list
-```
-
-## Time Filters
-
-```
-kritter/calendar/format/time
-kritter/calendar/format/time/span
-kritter/calendar/format/time/span/start
-kritter/calendar/format/time/span/end
-```
 
 ## ?? Venue Filters ??
 
@@ -70,7 +154,6 @@ Only show start am/pm in time span if they're different
 
 ```php
 <?php
-
 // time_span_start
 add_filter('kritter/calendar/format/time_span_start', function($format, $event) {
 	if ($event->start()->format('a') == $event->end()->format('a'))
@@ -86,7 +169,6 @@ Only show minutes if not :00 and am/pm if different
 
 ```php
 <?php
-
 // time_span_start
 add_filter('kritter/calendar/format/time_span_start', function($format, $event) {
 	$is_same_ampm = ($event->start()->format('a') === $event->end()->format('a'));
