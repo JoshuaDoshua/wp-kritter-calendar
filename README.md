@@ -50,7 +50,7 @@ add_filter('kritter/calendar/format/date_span', function($format, $kritter) {
 }, 10, 2);
 ```
 
-> **NOTE** You can't differentiate start/end formatting here.
+> **NOTE:** You can't differentiate start/end formatting here.
 >
 > If you need to, use both `end_span_start` and `date_span_end`
 
@@ -100,7 +100,7 @@ add_filter('kritter/calendar/format/time_span', function($format, $kritter) {
 }, 10, 2);
 ```
 
-> **NOTE** You can't differentiate start/end formatting here.
+> **NOTE:** You can't differentiate start/end formatting here.
 >
 > If you need to, use both `time_span_start` and `time_span_end`
 
