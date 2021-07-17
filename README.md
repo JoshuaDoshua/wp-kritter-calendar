@@ -24,7 +24,7 @@
 
 ## Important Reference Links
 
-- [Wiki](/JoshuaDoshua/wp-kritter-calendar/wiki)
+- [Wiki](https://github.com/JoshuaDoshua/wp-kritter-calendar/wiki)
 - [php DateTime::format](https://www.php.net/manual/en/datetime.format.php)
 - [Carbon](https://carbon.nesbot.com/docs)
 
