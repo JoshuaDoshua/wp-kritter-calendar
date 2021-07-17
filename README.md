@@ -11,6 +11,7 @@
 
 # Formatting Filters
 
+You can utilize Carbons many helpers to make customizing formatting fast and flexible.
 
 Filter Structure
 
@@ -18,7 +19,10 @@ Filter Structure
 
 > All format filters accept $format and $object parameters
 >
-> $format is the current format in the 
+> `$format` is the current format in the filter execution
+> `$object` is the \Kritter\Calendar\MODEL object and has a `$post_id` reference to the `\WP_Post`
+
+## Date Filters
 
 ```
 kritter/calendar/format/date
@@ -26,12 +30,13 @@ kritter/calendar/format/date/span
 kritter/calendar/format/date/span/start
 kritter/calendar/format/date/span/end
 
-kritter/calendar/format/time
-kritter/calendar/format/time/span
-kritter/calendar/format/time/span/start
-kritter/calendar/format/time/span/end
+```
 
-# inherits date
+## Schedule Filters
+
+> These  filters inherit date filters because they are dates as well
+
+```
 kritter/calendar/format/schedule
 kritter/calendar/format/schedule/start
 kritter/calendar/format/schedule/end
@@ -42,9 +47,18 @@ kritter/calendar/format/schedule/daily
 kritter/calendar/format/schedule/daily/start
 kritter/calendar/format/schedule/daily/end
 kritter/calendar/format/schedule/daily/list
-
-# TODO: venue output
 ```
+
+## Time Filters
+
+```
+kritter/calendar/format/time
+kritter/calendar/format/time/span
+kritter/calendar/format/time/span/start
+kritter/calendar/format/time/span/end
+```
+
+## ?? Venue Filters ??
 
 ## Common Format Filters
 
