@@ -43,16 +43,16 @@ add_filter('kritter/calendar/format/date', function($format, $kritter) {
 
 All dates that are "n to n"
 
-> **NOTE** Yout can't differentiate start/end formatting here.
->
-> If you need to, use both `end_span_start` and `date_span_end`
-
 ```php
 <?php
 add_filter('kritter/calendar/format/date_span', function($format, $kritter) {
 	// ...
 }, 10, 2);
 ```
+
+> **NOTE** You can't differentiate start/end formatting here.
+>
+> If you need to, use both `end_span_start` and `date_span_end`
 
 #### `kritter/calendar/format/date_span_start`
 
@@ -93,16 +93,16 @@ add_filter('kritter/calendar/format/time', function($format, $kritter) {
 
 All times that are "n to n"
 
-> **NOTE** Yout can't differentiate start/end formatting here.
->
-> If you need to, use both `time_span_start` and `time_span_end`
-
 ```php
 <?php
 add_filter('kritter/calendar/format/time_span', function($format, $kritter) {
 	// ...
 }, 10, 2);
 ```
+
+> **NOTE** You can't differentiate start/end formatting here.
+>
+> If you need to, use both `time_span_start` and `time_span_end`
 
 #### `kritter/calendar/time_span_start`
 
