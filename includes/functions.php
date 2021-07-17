@@ -10,6 +10,9 @@ add_action('the_post', function($post) {
 	// 	$kritter->event = new \Kritter\Calendar\Venue($post->ID);
 });
 
+/* ===============
+ *  TEMPLATE TAGS
+ * ================ */
 
 function kritter_set_post_event($p = null) {
 	global $post;
@@ -19,27 +22,44 @@ function kritter_set_post_event($p = null) {
 		$p->event = new \Kritter\Calendar\Event($p->ID);
 }
 
-
-function get_the_event_date($p = null) {
+function get_the_event_date($p = null, $format = null) {
 	global $post;
 	$p = $p ?: $post;
 	kritter_set_post_event($p);
 
-	return $p->event->date;
+	return (string) $p->event->date;
+
+	// TODO find a way override the format here
+	return $format
+		? $p->event->date()->format($format)
+		: (string) $p->event->date;
 }
-function the_event_date($p = null) {
-	echo get_the_event_date($p);
+function the_event_date($p = null, $format = false) {
+	echo get_the_event_date($p, $format);
 }
 
-function get_the_event_time($p = null) {
+function get_the_event_time($p = null, $format = null) {
 	global $post;
 	$p = $p ?: $post;
 	kritter_set_post_event($p);
 
-	return $p->event->time;
+	return (string) $p->event->time;
+
+	// TODO find way to override time
+	return $format
+		? $p->event->time()->format($format)
+		: (string) $p->event->time;
 }
-function the_event_time($p = null) {
-	echo get_the_event_time($p);
+function the_event_time($p = null, $format = false) {
+	echo get_the_event_time($p, $format);
+}
+
+function get_event_schedule($p = null) {
+	global $post;
+	$p = $p ?: $post;
+	kritter_set_post_event($p);
+
+	return (string) $p->event->schedule;
 }
 
 function is_event_all_day($p = null) {
@@ -58,6 +78,20 @@ function is_event_multi_days($p = null) {
 	return $p->event->isMultiDay();
 }
 
+// TODO
+function get_events($query = null) {}
+// TODO custom query params
+function get_future_events($query = null) {
+	return get_events(array_merge([
+		'event_start_after' => 'today',
+	], $query));
+}
+function get_past_events($query = null) {
+	return get_events(array_merge([
+		'event_start_before' => 'today',
+	], $query));
+}
+function get_venues($query = null) {}
 // TODO
 function get_venue_events() {}
 // TODO

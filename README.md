@@ -1,6 +1,8 @@
-# Kritter Calendar Events
+> About this plugin
+>
+> This plugin is intended for developers. It requires ACF Pro and, while some defaults have been setup, typically requires some template coding setup & filters.
 
-> Requires ACF Pro
+# Kritter Calendar Events
 
 ## Important Reference Links
 
@@ -9,52 +11,94 @@
 
 # Formatting Filters
 
-```
-apply_filters('kritter/calendar/event/format/...', function($format, $eventOrSchedule) {
-	return 'l F jS, Y';
-}, 10, 2);
 
-# TODO: multimple function reuse
+Filter Structure
 
-# TODO: eventOrSchedule methods
-# $obj->start->isSameYear($obj->end) ? ...
-```
+`kritter/calendar/format/{type}?/{contexts}`
+
+> All format filters accept $format and $object parameters
+>
+> $format is the current format in the 
 
 ```
-kritter/calendar/event/format/date
-kritter/calendar/event/format/date/span
-kritter/calendar/event/format/date/span/start
-kritter/calendar/event/format/date/span/end
+kritter/calendar/format/date
+kritter/calendar/format/date/span
+kritter/calendar/format/date/span/start
+kritter/calendar/format/date/span/end
 
-kritter/calendar/event/format/time
-kritter/calendar/event/format/time/span
-kritter/calendar/event/format/time/span/start
-kritter/calendar/event/format/time/span/end
+kritter/calendar/format/time
+kritter/calendar/format/time/span
+kritter/calendar/format/time/span/start
+kritter/calendar/format/time/span/end
 
 # inherits date
-kritter/calendar/event/format/schedule
-kritter/calendar/event/format/schedule/start
-kritter/calendar/event/format/schedule/end
-kritter/calendar/event/format/schedule/list
+kritter/calendar/format/schedule
+kritter/calendar/format/schedule/start
+kritter/calendar/format/schedule/end
+kritter/calendar/format/schedule/list
 
 # TODO: recurrence specific?
-kritter/calendar/event/format/schedule/daily
-kritter/calendar/event/format/schedule/daily/start
-kritter/calendar/event/format/schedule/daily/end
-kritter/calendar/event/format/schedule/daily/list
+kritter/calendar/format/schedule/daily
+kritter/calendar/format/schedule/daily/start
+kritter/calendar/format/schedule/daily/end
+kritter/calendar/format/schedule/daily/list
 
 # TODO: venue output
 ```
 
 ## Common Format Filters
 
-```
-// only show start am/pm in time span if different
-// e.g. 10:00 am - 4:00 pm vs 2:00 - 4:00 pm
+### Time Spans
+
+Only show start am/pm in time span if they're different
+
+> "10:00 am - 4:00 pm" vs "2:00 - 4:00 pm"
+
+```php
+<?php
+
+// time_span_start
 add_filter('kritter/calendar/format/time_span_start', function($format, $event) {
 	if ($event->start()->format('a') == $event->end()->format('a'))
 		return "g:i";
 
 	return "g:i a";
+}, 10, 2);
+```
+
+Only show minutes if not :00 and am/pm if different
+
+> e.g. "2 - 4 pm" or "2:15 - 4 pm" or "2:30 - 4 pm"
+
+```php
+<?php
+
+// time_span_start
+add_filter('kritter/calendar/format/time_span_start', function($format, $event) {
+	$is_same_ampm = ($event->start()->format('a') === $event->end()->format('a'));
+
+	if ($event->start()->minute === 0) {
+		return $is_same_ampm
+			? "g"
+			: "g a";
+	}
+
+	return $is_same_ampm
+		? "g:i"
+		: "g:i a";
+}, 10, 2);
+
+// time_span_end
+add_filter('kritter/calendar/format/time_span_end', function($format, $event) {
+	return $event->end()->minute === 0
+		? "g a"
+		: "g:i a";
+
+	if ($event->end()->format('a') == $event->end()->format('a'))
+		return "g:i";
+
+	return "g:i a";
+
+	return 'c';
 }, 10, 2);
 ```
