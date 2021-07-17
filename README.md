@@ -27,7 +27,7 @@ By default, this plugin uses the default date/time format from the WP admin. I'v
 ## Date Filters
 
 
-### `kritter/calendar/format/date`
+#### `kritter/calendar/format/date`
 
 All Dates
 
