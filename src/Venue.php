@@ -23,10 +23,15 @@ class Venue extends Settings
 	{
 		$this->post_id = get_post($post_id);
 
-		$meta = get_fields($post_id);
-		$this->address = $meta['address'];
-		$this->map = $meta['map'];
-		$this->contact = $meta['contact'];
+		// $meta = get_fields($post_id);
+		// 
+		// $this->address = $meta['address'];
+		// $this->map = $meta['map'];
+		// $this->contact = $meta['contact'];
+
+		$this->address = get_field('address', $post_id);
+		$this->map = get_field('map', $post_id);
+		$this->contact = get_field('contact', $post_id);
 	}
 
 	public function __toString(): string

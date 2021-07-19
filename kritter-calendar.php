@@ -1,4 +1,8 @@
 <?php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 /**
  * Plugin Name: Kritter Calendar (ACF)
  * Plugin URI: https://github.com/joshuadoshua/kritter-calendar-acf
@@ -21,11 +25,26 @@ define('KRITTERCAL_DIR', plugin_dir_path(__FILE__));
 
 require(__DIR__."/vendor/autoload.php");
 
-\Carbon\Carbon::setWeekStartsAt(get_option('start_of_week'));
+global $kritter_calendar;
+
+function kritterCalendar() {
+	global $kritter_calendar;
+
+	if (!isset($kritter_calendar)) {
+		$kritter_calendar = new Kritter\Calendar\Calendar;
+		// $kritter_calendar->init();
+	}
+
+	return $kritter_calendar;
+}
+
+kritterCalendar();
+
+new Kritter\Calendar\Calendar;
 
 // what can we remoeve from here and put in plugin class
 require(__DIR__.'/includes/post_types.php');
-require(__DIR__.'/includes/acf.php');
+// require(__DIR__.'/includes/acf.php');
 require(__DIR__.'/includes/functions.php');
 // require(__DIR__.'/includes/cli.php');
 

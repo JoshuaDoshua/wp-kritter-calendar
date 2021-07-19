@@ -70,7 +70,7 @@ function is_event_all_day($p = null) {
 	return $p->event->meta['is_all_day'];
 }
 
-function is_event_multi_days($p = null) {
+function is_event_multiday($p = null) {
 	global $post;
 	$p = $p ?: $post;
 	kritter_set_post_event($p);

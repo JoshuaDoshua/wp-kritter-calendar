@@ -155,6 +155,7 @@ add_action('init', function() {
 });
 
 add_filter('the_post', function($post) {
+	if (is_admin()) return;
 	if ($post->post_type !== "kritter_event") return;
 
 	$post->event = new \Kritter\Calendar\Event($post->ID);

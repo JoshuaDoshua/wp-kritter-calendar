@@ -4,53 +4,46 @@ namespace Kritter\Calendar;
 
 use Carbon\Carbon;
 use Kritter\Calendar\Concerns\HandlesDates;
+use Kritter\Calendar\Recurrences\Recurrence;
 
-class Schedule extends Settings
+class Schedule 
 {
 	use HandlesDates;
 
 	// @var int
-	public $event_id;
+	public $post_id;
 
 	// @var string
 	public $recurrence;
 
-	// @var array
-	public $meta;
-
-	public function __construct(int $event_id, string $recurrence)
+	public function __construct(int $post_id, string $recurrence)
 	{
-		$this->event_id = $event_id;
-		$this->recurrence = $recurrence;
-		$this->meta = get_field('recurrence_meta', $event_id);
+		$this->post_id = $post_id;
+		$this->recurrence = $this->setRecurrence($recurrence);
 
 		$this->setDates(
-			get_field('schedule_start', $event_id),
-			get_field('schedule_end', $event_id)
+			get_field('recurrence_meta_schedule_start', $post_id),
+			get_field('recurrence_meta_schedule_end', $post_id)
 		);
 		$this->setTimes();
 	}
 
-	// after date has been filtered
-	public function additionalFormatSingle(string $format, string $type, string $context): string
+	public function setRecurrence(string $recurrence): Recurrence
 	{
-		$ns = "kritter/calendar/schedule/format";
-		$format = apply_filters($ns, $format, $this);
-		$format = apply_filters("{$ns}/{$context}", $format, $this);
+		$map = [
+			'day' => \Kritter\Calendar\Recurrences\Daily::class,
+			'week' => \Kritter\Calendar\Recurrences\Weekly::class,
+			'month_date' => \Kritter\Calendar\Recurrences\MonthlyDates::class,
+			'month_day' => \Kritter\Calendar\Recurrences\MonthlyDays::class,
+			'year' => \Kritter\Calendar\Recurrences\Annually::class,
+		];
 
-		return $format;
+		return (new $map[$recurrence]($this->post_id));
 	}
 
-	public function formatSpan(Carbon $start, Carbon $end, string $type): string
+	public function __toString(): string
 	{
-		return $this->formatSingle($start, "schedule", "span_start")
-			. "&nbsp;&ndash;&nbsp;"
-			. $this->formatSingle($end, "schedule", "span_end");
-	}
-
-	public function start(): Carbon
-	{
-		return $this->start;
+		return (string) $this->summary;
 	}
 
 	public function __get($var)
@@ -58,17 +51,26 @@ class Schedule extends Settings
 		switch ($var):
 			case "start":
 				return $this->formatSingle($this->start, 'schedule', 'start');
-
 			case "end":
 				return $this->formatSingle($this->end, 'schedule', 'end');
-
 			case "span":
-				return $this->formatSpan($this->start, $this->end, 'span');
-
+				return $this->formatSpan($this->start, $this->end, 'schedule');
+			case "summary":
+				return $this->recurrence->getSummary();
+				// return "schedule_summary";
 			default:
 				return $this->$var;
-
 		endswitch;
+	}
+
+	public function start(): Carbon
+	{
+		return $this->start;
+	}
+
+	public function end(): Carbon
+	{
+		return $this->end;
 	}
 
 	// __toString

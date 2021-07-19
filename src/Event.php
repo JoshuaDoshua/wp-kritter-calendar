@@ -4,6 +4,7 @@ namespace Kritter\Calendar;
 
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
+use Kritter\Calendar\Schedule;
 use Kritter\Calendar\Concerns\HandlesDates;
 
 class Event
@@ -17,7 +18,7 @@ class Event
 	public $meta;
 
 	// @var Carbon\CarbonInterval
-	public $interval;
+	private $interval;
 
 	// @var \Kritter\Calendar\Venue 
 	public $venue;
@@ -33,6 +34,8 @@ class Event
 		// so they're easily accessible outside of class
 		$this->meta = get_fields($post_id);
 
+		if (!$this->meta) return;
+
 		$this->setDates($this->meta['start_date'], $this->meta['end_date']);
 		$this->setTimes(
 			$this->meta['is_all_day'],
@@ -45,12 +48,11 @@ class Event
 			? $this->start->diffAsCarbonInterval($this->end->copy()->addSeconds(1), true)
 			: $this->start->diffAsCarbonInterval($this->end, true);
 
-
 		$this->venue = $this->meta['venue']
 			? new Venue($this->meta['venue'])
 			: false;
 		
-		$this->schedule = $this->meta['recurrence'] == "onetime"
+		$this->schedule = $this->meta['recurrence'] == "once"
 			? false
 			: new Schedule($this->post_id, $this->meta['recurrence']);
 	}
@@ -64,7 +66,9 @@ class Event
 			case "time":
 				return (string) $this->getTime();
 			case "length":
-				return (string) $this->interval;
+				return $this->meta['hide_end_time']
+					? false
+					: (string) $this->interval;
 			
 			// TODO: find way to format this once
 			// combine other into getDateTime()
@@ -134,7 +138,7 @@ class Event
 			return $all_day_text;
 
 		return $this->meta['hide_end_time']
-			? $this->formatSingle($this->start, "time", "singular")
+			? $this->formatSingle($this->start, "time")
 			: $this->formatSpan($this->start, $this->end, 'time');
 	}
 
