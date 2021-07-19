@@ -18,6 +18,9 @@ trait HandlesDates
 
 	public function setDates(string $start, string $end): void
 	{
+		// TODO
+		// do we really need this?
+		// should be set globally somewhere
 		$this->tz = get_option('gmt_offset');
 
 		$this->start = Carbon::createFromFormat("Ymd", $start, $this->tz);
@@ -35,22 +38,13 @@ trait HandlesDates
 		}
 	}
 
-	protected function supOrdinals(string $string): string
-	{
-		$sup = apply_filters('kritter/calendar/format/sup_ordinals', true, $this);
-
-		if (!$sup) return $string;
-
-		return preg_replace('/(\d)(st|nd|rd|th)([^\w\d]|$)/', '$1<sup>$2</sup>$3', $string);
-	}
-
 	// type[date|time|schedule]
 	// context[singular|start|end|list]
 	public function formatSingle(Carbon $date, string $type, string $context = null): string
 	{
 		$format = $this->newFormat($type, $context);
 
-		return $this->supOrdinals($date->format($format));
+		return Calendar::supOrdinals($date->format($format));
 	}
 
 	// type [date|time|schedule]
@@ -59,9 +53,14 @@ trait HandlesDates
 		$start_format = $this->newFormat($type, "span_start");
 		$end_format = $this->newFormat($type, "span_end");
 
-		$span = apply_filters("kritter/calendar/separator", "&nbsp;&ndash;&nbsp;", $this);
+		$span_type = $type != "time" ? "date" : $type;
 
-		return $this->supOrdinals($start->format($start_format)
+		$span = apply_filters("kritter/calendar/separator", "&nbsp;&ndash;&nbsp;", $this);
+		$span = apply_filters("kritter/calendar/separator_{$span_type}", $span, $this);
+		if ($type == "schedule") // TODO ew?
+			$span = apply_filters("kritter/calendar/separator_schedule", $span, $this);
+
+		return Calendar::supOrdinals($start->format($start_format)
 			. $span
 			. $end->format($end_format));
 	}

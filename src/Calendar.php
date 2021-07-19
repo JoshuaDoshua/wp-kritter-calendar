@@ -4,7 +4,7 @@ namespace Kritter\Calendar;
 
 class Calendar
 {
-	// TODO
+	// TODO?
 	public static $wp_tz;
 	public static $wp_date_format;
 	public static $wp_time_format;
@@ -13,6 +13,7 @@ class Calendar
 		"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
 	];
 
+	// TODO, explore other ways to handle this
 	const FORMAT_FILTERS = [
 		'time_start' => ['time'],
 		'time_end' => ['time'],
@@ -20,12 +21,12 @@ class Calendar
 		'time_span_start' => [
 			'time',
 			'time_start',
-			'time_span'
+			'time_span',
 		],
 		'time_span_end' => [
 			'time',
 			'time_end',
-			'time_span'
+			'time_span',
 		],
 		'date_start' => ['date'],
 		'date_end' => ['date'],
@@ -33,43 +34,43 @@ class Calendar
 		'date_span_start' => [
 			'date',
 			'date_start',
-			'date_span'
+			'date_span',
 		],
 		'date_span_end' => [
 			'date',
 			'date_end',
-			'date_span'
+			'date_span',
 		],
 		'schedule_start' => [
 			'date',
-			'schedule'
+			'schedule',
 		],
 		'schedule_end' => [
 			'date',
-			'schedule'
+			'schedule',
 		],
 		'schedule_span' => [
 			'date',
 			'date_span',
-			'schedule'
+			'schedule',
 		],
 		'schedule_span_start' => [
 			'date',
 			'date_start',
 			'date_span',
 			'schedule',
-			'schedule_span'
+			'schedule_span',
 		],
 		'schedule_span_end' => [
 			'date',
 			'date_end',
 			'date_span',
 			'schedule',
-			'schedule_span'
+			'schedule_span',
 		],
 		'schedule_list' => [
 			'date',
-			'schedule'
+			'schedule',
 		],
 	];
 
@@ -100,7 +101,7 @@ class Calendar
 
 	public static function supOrdinals(string $string): string
 	{
-		$sup = apply_filters('kritter/calendar/format/sup_ordinals', true, $this);
+		$sup = apply_filters('kritter/calendar/format/sup_ordinals', true);
 
 		if (!$sup) return $string;
 

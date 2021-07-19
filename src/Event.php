@@ -30,9 +30,16 @@ class Event
 	{
 		$this->post_id = $post_id;
 		
-		// TODO do specific fields
-		// so they're easily accessible outside of class
-		$this->meta = get_fields($post_id);
+		$this->meta = [
+			'start_date' => get_field('start_date', $post_id),
+			'end_date' => get_field('end_date', $post_id),
+			'is_all_day' => get_field('is_all_day', $post_id),
+			'start_time' => get_field('start_time', $post_id),
+			'end_time' => get_field('end_time', $post_id),
+			'hide_end_time' => get_field('hide_end_time', $post_id),
+			'venue' => get_field('venue', $post_id),
+			'recurrence' => get_field('recurrence', $post_id),
+		];
 
 		if (!$this->meta) return;
 
@@ -43,7 +50,8 @@ class Event
 			$this->meta['end_time']
 		);
 
-		// TODO ugly
+		// so ugly, but need to handle 24 hrs & isSameDay together somehow
+		// and Round Carbon method wasnt working
 		$this->interval = $this->meta['is_all_day']
 			? $this->start->diffAsCarbonInterval($this->end->copy()->addSeconds(1), true)
 			: $this->start->diffAsCarbonInterval($this->end, true);
@@ -145,17 +153,3 @@ class Event
 	// TODO? start/end?
 	// public function getDateTime(): string {}
 }
-
-// TODO
-// do we really need Carbon?
-// makes it easy for the front-end
-// but how much do we anticipate manipulating dates?
-//
-// NOTE GREAT IDEA
-// use custom filters for date formatting!
-// replace CalendarSettings formatting options!
-// this plugin is for me/us, don't rly care about the users being able
-
-// filters for all defined in calendar settings
-// narrow by tax/cat?
-// put overrides in acf_fields per event? et al?
