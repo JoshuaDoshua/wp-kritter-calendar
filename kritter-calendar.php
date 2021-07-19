@@ -57,4 +57,9 @@ require(__DIR__.'/includes/functions.php');
 // register_uninstall_hook(__FILE__, ['Kriter\\Calendar', '_uninstall']);
 
 
-require(__DIR__."/acf-field-date-range/acf-field-date-range.php");
+// require(__DIR__."/acf-field-date-range/acf-field-date-range.php");
+
+add_action('acf/input/admin_enqueue_scripts', function() {
+	wp_enqueue_script('kritter-acf-events', plugin_dir_url(__FILE__)."/acf_kritter_calendar.js", [], true);
+});
+
