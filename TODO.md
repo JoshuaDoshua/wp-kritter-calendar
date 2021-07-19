@@ -1,5 +1,7 @@
 # TODO
 
+- [ ] store post_type key as static var
+- [ ] Default to Google Maps API
 - [ ] Better internationalization
 - [x] Add a separator filter
 - [-] Move static vars to a base plugin class
@@ -11,6 +13,8 @@
 - [ ] acf validation
 - [ ] look into `current_theme_supports`
 	- vs adding a filter to remove all formatting filters
+	- make filters opt-in
+- [ ] yoast seo data for events/venues
 
 ---
 

@@ -7,8 +7,8 @@ class Venue extends Settings
 	// @var int
 	protected $post_id;
 
-	// @var array
-	protected $meta;
+	// @var str
+	public $title;
 
 	// @var array
 	protected $address;
@@ -21,23 +21,28 @@ class Venue extends Settings
 
 	public function __construct(int $post_id)
 	{
-		$this->post_id = get_post($post_id);
+		$this->post_id = $post_id;
 
-		// $meta = get_fields($post_id);
-		// 
-		// $this->address = $meta['address'];
-		// $this->map = $meta['map'];
-		// $this->contact = $meta['contact'];
+		$this->title = get_the_title($post_id);
 
 		$this->address = get_field('address', $post_id);
 		$this->map = get_field('map', $post_id);
+		dd($this->map);
 		$this->contact = get_field('contact', $post_id);
+	}
+
+	public function __get($var): string
+	{
+		if (isset($this->address[$var]))
+			return $this->address[$var];
+
+		return (string) $this->$var;
 	}
 
 	public function __toString(): string
 	{
 		$str_arr = [
-			get_the_title($this->post_id),
+			$this->title,
 			$this->address['street'],
 			"{$this->address['city']}",
 			$this->address['state'],
