@@ -1,9 +1,22 @@
 <?php
 
-namespace Kritter\Calendar;
+namespace Kritter;
 
 class Calendar
 {
+	const SETTINGS_KEY = "kritter_calendar_settings";
+	const EVENT_POST_TYPE = "kritter_event";
+	const VENUE_POST_TYPE = "kritter_venue";
+	const EVENT_CAT_TAX = "kritter_event_category";
+	const EVENT_PERFORMER_TAX = "kritter_event_performer";
+	const EVENT_SPONSOR_TAX = "kritter_event_sponsor";
+	const EVENT_ORGANIZER_TAX = "kritter_event_organizer";
+	const EVENT_FUNDER_TAX = "kritter_event_funder";
+
+	// const EVENT_POST_TYPE = "kritter_event";
+	// const EVENT_POST_TYPE = "kritter_event";
+	// const EVENT_POST_TYPE = "kritter_event";
+
 	// TODO?
 	public static $wp_tz;
 	public static $wp_date_format;
@@ -58,6 +71,7 @@ class Calendar
 			'date',
 			'date_start',
 			'date_span',
+			'date_span_start',
 			'schedule',
 			'schedule_span',
 		],
@@ -65,6 +79,7 @@ class Calendar
 			'date',
 			'date_end',
 			'date_span',
+			'date_span_end',
 			'schedule',
 			'schedule_span',
 		],
@@ -101,6 +116,10 @@ class Calendar
 
 	public static function supOrdinals(string $string): string
 	{
+		$ns = "kritter/calendar/format";
+
+		if (!apply_filters("{$ns}/enable", true)) return $string;
+
 		$sup = apply_filters('kritter/calendar/format/sup_ordinals', true);
 
 		if (!$sup) return $string;

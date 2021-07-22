@@ -4,7 +4,7 @@ namespace Kritter\Calendar\Recurrences;
 
 use Carbon\Carbon;
 
-use Kritter\Calendar\Calendar;
+use Kritter\Calendar;
 
 class MonthlyDays extends Recurrence
 {

@@ -32,6 +32,8 @@ class Event
 	// @var Carbon\CarbonInterval
 	protected $interval;
 
+	public $type;
+
 	// @var \Kritter\Calendar\Venue 
 	public $venue;
 
@@ -60,6 +62,8 @@ class Event
 		$this->interval = $this->is_all_day
 			? $this->start->diffAsCarbonInterval($this->end->copy()->addSeconds(1), true)
 			: $this->start->diffAsCarbonInterval($this->end, true);
+
+		$this->type = get_field('event_type', $post_id);
 
 		$venue_id = get_field('venue', $post_id);
 		$this->venue = $venue_id

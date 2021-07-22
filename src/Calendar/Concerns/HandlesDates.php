@@ -3,7 +3,7 @@
 namespace Kritter\Calendar\Concerns;
 
 use Carbon\Carbon;
-use Kritter\Calendar\Calendar;
+use Kritter\Calendar;
 
 trait HandlesDates
 {
@@ -55,14 +55,20 @@ trait HandlesDates
 
 		$span_type = $type != "time" ? "date" : $type;
 
-		$span = apply_filters("kritter/calendar/separator", "&nbsp;&ndash;&nbsp;", $this);
+		$span = "&nbsp;&ndash;&nbsp;";
+
+		if (!apply_filters('kritter/calendar/format/enable', false))
+			return $start->format($start_format) . $span . $end->format($end_format);
+
+		$span = apply_filters("kritter/calendar/separator", $span, $this);
 		$span = apply_filters("kritter/calendar/separator_{$span_type}", $span, $this);
+
 		if ($type == "schedule") // TODO ew?
 			$span = apply_filters("kritter/calendar/separator_schedule", $span, $this);
 
 		return Calendar::supOrdinals($start->format($start_format)
 			. $span
-			. $end->format($end_format));
+			. Calendar::supOrdinals($end->format($end_format)));
 	}
 
 	private function newFormat(string $type = "date", $context = null): string
@@ -73,8 +79,9 @@ trait HandlesDates
 		$wp_type = $type == "schedule" ? "date" : $type;
 		$format = get_option("{$wp_type}_format");
 
-		$format = apply_filters("{$ns}/{$type}", $format, $this);
+		if (!apply_filters("{$ns}/enable", false)) return $format;
 
+		$format = apply_filters("{$ns}/{$type}", $format, $this);
 
 		if ($context):
 			$full_context = "{$type}_{$context}";

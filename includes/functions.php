@@ -1,5 +1,14 @@
 <?php
 
+// ensure a kritter event is setup
+function kritter_set_post_event($p = null) {
+	global $post;
+	$p = $p ?: $post;
+
+	if (!$p->event)
+		$p->event = new \Kritter\Calendar\Event($p->ID);
+}
+
 // add our classes to the \WP_Post object
 add_action('the_post', function($post) {
 
@@ -10,17 +19,18 @@ add_action('the_post', function($post) {
 	// 	$kritter->event = new \Kritter\Calendar\Venue($post->ID);
 });
 
+
+
+return;
+
+
+
+
+
 /* ===============
  *  TEMPLATE TAGS
  * ================ */
 
-function kritter_set_post_event($p = null) {
-	global $post;
-	$p = $p ?: $post;
-
-	if (!$p->event)
-		$p->event = new \Kritter\Calendar\Event($p->ID);
-}
 
 function get_the_event_date($p = null, $format = null) {
 	global $post;

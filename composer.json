@@ -4,6 +4,6 @@
         "spatie/calendar-links": "^1.6"
     },
 	"autoload": {
-        "psr-4": {"Kritter\\Calendar\\": "src/"}
+        "psr-4": {"Kritter\\": "src/"}
     }
 }

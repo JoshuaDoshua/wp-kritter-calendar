@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] store post_type key as static var
+- [x] store post_type key as static var
 - [ ] Default to Google Maps API
 - [ ] Better internationalization
 - [x] Add a separator filter
@@ -15,6 +15,10 @@
 	- vs adding a filter to remove all formatting filters
 	- make filters opt-in
 - [ ] yoast seo data for events/venues
+- [ ] wp cli function to export templates
+- [ ] catch if recurrence compared event length
+	- e.g. 2 day event every day
+- [ ] "rescheduleD" and "cancelled" event statuses
 
 ---
 

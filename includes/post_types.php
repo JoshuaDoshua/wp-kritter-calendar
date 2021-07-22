@@ -1,7 +1,18 @@
 <?php
 
+if (function_exists('acf_add_options_sub_page')):
+acf_add_options_sub_page([
+	'page_title' => 'Calendar Settings',
+	'menu_title' => 'Settings',
+	'menu_slug' => 'calendar-settings',
+	'capability' => 'edit_posts',
+	'parent_slug' => 'edit.php?post_type=' . \Kritter\Calendar::EVENT_POST_TYPE,
+	'post_id' => \Kritter\Calendar::SETTINGS_KEY,
+]);
+endif; // acf_add_options_page
+
 add_action('init', function() {
-	register_post_type('kritter_event', [
+	register_post_type(\Kritter\Calendar::EVENT_POST_TYPE, [
 		'label'                 => 'Event',
 		'description'           => 'Kritter Calendar Event',
 		'labels'                => [
@@ -33,8 +44,8 @@ add_action('init', function() {
 			'items_list_navigation' => 'Events list navigation',
 			'filter_items_list'     => 'Filter events list',
 		],
-		'supports'              => ['title', 'editor', 'thumbnail'],
-		'taxonomies'            => ['kritter_event_category', 'kritter_event_tag'],
+		'supports'              => ['title', 'editor', 'thumbnail', 'excerpt'],
+		// 'taxonomies'            => [],
 		'hierarchical'          => false,
 		'public'                => true,
 		'show_ui'               => true,
@@ -58,7 +69,7 @@ add_action('init', function() {
 		'rest_base'             => 'events',
 	]);
 
-	register_post_type('kritter_venue', [
+	register_post_type(\Kritter\Calendar::VENUE_POST_TYPE, [
 		'label'                 => 'Venue',
 		'description'           => 'Kritter Calendar Venue',
 		'labels'                => [
@@ -90,12 +101,12 @@ add_action('init', function() {
 			'items_list_navigation' => 'Venues list navigation',
 			'filter_items_list'     => 'Filter venues list',
 		],
-		'supports'              => ['title', 'editor', 'thumbnail'],
+		'supports'              => ['title', 'editor', 'thumbnail', 'excerpt'],
 		'taxonomies'            => [],
 		'hierarchical'          => false,
 		'public'                => true,
 		'show_ui'               => true,
-		'show_in_menu'          => "edit.php?post_type=kritter_event",
+		'show_in_menu'          => "edit.php?post_type=" . \Kritter\Calendar::EVENT_POST_TYPE,
 		'menu_position'         => 10,
 		'menu_icon'             => null,
 		'show_in_admin_bar'     => false,
@@ -115,7 +126,7 @@ add_action('init', function() {
 		'rest_base'             => 'venues',
 	]);
 
-	register_taxonomy('kritter_event_category', ['kritter_event'], [
+	register_taxonomy(\Kritter\Calendar::EVENT_CAT_TAX, [\Kritter\Calendar::EVENT_POST_TYPE], [
 		'labels'                     => [
 			'name'                       => 'Event Categories',
 			'singular_name'              => 'Event Category',
@@ -135,7 +146,7 @@ add_action('init', function() {
 			'search_items'               => 'Search Categories',
 			'not_found'                  => 'Not Found',
 			'no_terms'                   => 'No Categories',
-			'items_list'                 => 'Items list',
+			'items_list'                 => 'Categories list',
 			'items_list_navigation'      => 'Categories list navigation',
 		],
 		'hierarchical'               => true,
@@ -152,14 +163,202 @@ add_action('init', function() {
 		'show_in_rest'               => true,
 		'rest_base'                  => 'events/categories',
 	]);
+
+	register_taxonomy(\Kritter\Calendar::EVENT_PERFORMER_TAX, [\Kritter\Calendar::EVENT_POST_TYPE], [
+		'labels'                     => [
+			'name'                       => 'Event Performer',
+			'singular_name'              => 'Event Performer',
+			'menu_name'                  => 'Performers',
+			'all_items'                  => 'All Event Performers',
+			'parent_item'                => 'Parent Performer',
+			'parent_item_colon'          => 'Parent Performer:',
+			'new_item_name'              => 'New Event Performer',
+			'add_new_item'               => 'Add New Performer',
+			'edit_item'                  => 'Edit Performer',
+			'update_item'                => 'Update Performer',
+			'view_item'                  => 'View Performer',
+			'separate_items_with_commas' => 'Separate performers with commas',
+			'add_or_remove_items'        => 'Add or remove performers',
+			'choose_from_most_used'      => 'Choose from the most used',
+			'popular_items'              => 'Popular Event Performers',
+			'search_items'               => 'Search Performers',
+			'not_found'                  => 'Not Found',
+			'no_terms'                   => 'No Performers',
+			'items_list'                 => 'Performers list',
+			'items_list_navigation'      => 'Performers list navigation',
+		],
+		'hierarchical'               => false,
+		'public'                     => true,
+		'show_ui'                    => true,
+		'show_admin_column'          => true,
+		'show_in_quick_edit'		 => false,
+		'show_in_nav_menus'          => false,
+		// doesnt work w gutenberg w/o filter below
+		'meta_box_cb'				 => false,
+		'show_tagcloud'              => true,
+		'rewrite'                    => [
+			'slug'                       => 'calendar/performers',
+			'with_front'                 => true,
+			'hierarchical'               => true,
+		],
+		'show_in_rest'               => true,
+		'rest_base'                  => 'events/performers',
+	]);
+
+	register_taxonomy(\Kritter\Calendar::EVENT_ORGANIZER_TAX, [\Kritter\Calendar::EVENT_POST_TYPE], [
+		'labels'                     => [
+			'name'                       => 'Event Organizer',
+			'singular_name'              => 'Event Organizer',
+			'menu_name'                  => 'Organizers',
+			'all_items'                  => 'All Event Organizers',
+			'parent_item'                => 'Parent Organizer',
+			'parent_item_colon'          => 'Parent Organizer:',
+			'new_item_name'              => 'New Event Organizer',
+			'add_new_item'               => 'Add New Organizer',
+			'edit_item'                  => 'Edit Organizer',
+			'update_item'                => 'Update Organizer',
+			'view_item'                  => 'View Organizer',
+			'separate_items_with_commas' => 'Separate organizers with commas',
+			'add_or_remove_items'        => 'Add or remove performers',
+			'choose_from_most_used'      => 'Choose from the most used',
+			'popular_items'              => 'Popular Event Organizers',
+			'search_items'               => 'Search Organizers',
+			'not_found'                  => 'Not Found',
+			'no_terms'                   => 'No Organizers',
+			'items_list'                 => 'Organizers list',
+			'items_list_navigation'      => 'Organizers list navigation',
+		],
+		'hierarchical'               => false,
+		'public'                     => true,
+		'show_ui'                    => true,
+		'show_admin_column'          => true,
+		'show_in_quick_edit'		 => false,
+		'show_in_nav_menus'          => false,
+		// doesnt work w gutenberg w/o filter below
+		'meta_box_cb'				 => false,
+		'show_tagcloud'              => true,
+		'rewrite'                    => [
+			'slug'                       => 'calendar/organizers',
+			'with_front'                 => true,
+			'hierarchical'               => true,
+		],
+		'show_in_rest'               => true,
+		'rest_base'                  => 'events/organizers',
+	]);
+
+	register_taxonomy(\Kritter\Calendar::EVENT_SPONSOR_TAX, [\Kritter\Calendar::EVENT_POST_TYPE], [
+		'labels'                     => [
+			'name'                       => 'Event Sponsor',
+			'singular_name'              => 'Event Sponsor',
+			'menu_name'                  => 'Sponsors',
+			'all_items'                  => 'All Event Sponsors',
+			'parent_item'                => 'Parent Sponsor',
+			'parent_item_colon'          => 'Parent Sponsor:',
+			'new_item_name'              => 'New Event Sponsor',
+			'add_new_item'               => 'Add New Sponsor',
+			'edit_item'                  => 'Edit Sponsor',
+			'update_item'                => 'Update Sponsor',
+			'view_item'                  => 'View Sponsor',
+			'separate_items_with_commas' => 'Separate sponsors with commas',
+			'add_or_remove_items'        => 'Add or remove performers',
+			'choose_from_most_used'      => 'Choose from the most used',
+			'popular_items'              => 'Popular Event Sponsors',
+			'search_items'               => 'Search Sponsors',
+			'not_found'                  => 'Not Found',
+			'no_terms'                   => 'No Sponsors',
+			'items_list'                 => 'Sponsors list',
+			'items_list_navigation'      => 'Sponsors list navigation',
+		],
+		'hierarchical'               => false,
+		'public'                     => true,
+		'show_ui'                    => true,
+		'show_admin_column'          => true,
+		'show_in_quick_edit'		 => false,
+		'show_in_nav_menus'          => false,
+		// doesnt work w gutenberg w/o filter below
+		'meta_box_cb'				 => false,
+		'show_tagcloud'              => true,
+		'rewrite'                    => [
+			'slug'                       => 'calendar/sponsors',
+			'with_front'                 => true,
+			'hierarchical'               => true,
+		],
+		'show_in_rest'               => true,
+		'rest_base'                  => 'events/sponsors',
+	]);
+
+	register_taxonomy(\Kritter\Calendar::EVENT_FUNDER_TAX, [\Kritter\Calendar::EVENT_POST_TYPE], [
+		'labels'                     => [
+			'name'                       => 'Event Funder',
+			'singular_name'              => 'Event Funder',
+			'menu_name'                  => 'Funders',
+			'all_items'                  => 'All Event Funders',
+			'parent_item'                => 'Parent Funder',
+			'parent_item_colon'          => 'Parent Funder:',
+			'new_item_name'              => 'New Event Funder',
+			'add_new_item'               => 'Add New Funder',
+			'edit_item'                  => 'Edit Funder',
+			'update_item'                => 'Update Funder',
+			'view_item'                  => 'View Funder',
+			'separate_items_with_commas' => 'Separate funders with commas',
+			'add_or_remove_items'        => 'Add or remove performers',
+			'choose_from_most_used'      => 'Choose from the most used',
+			'popular_items'              => 'Popular Event Funders',
+			'search_items'               => 'Search Funders',
+			'not_found'                  => 'Not Found',
+			'no_terms'                   => 'No Funders',
+			'items_list'                 => 'Funders list',
+			'items_list_navigation'      => 'Funders list navigation',
+		],
+		'hierarchical'               => false,
+		'public'                     => true,
+		'show_ui'                    => true,
+		'show_admin_column'          => true,
+		'show_in_quick_edit'		 => false,
+		'show_in_nav_menus'          => false,
+		// doesnt work w gutenberg w/o filter below
+		'meta_box_cb'				 => false,
+		'show_tagcloud'              => true,
+		'rewrite'                    => [
+			'slug'                       => 'calendar/funders',
+			'with_front'                 => true,
+			'hierarchical'               => true,
+		],
+		'show_in_rest'               => true,
+		'rest_base'                  => 'events/funders',
+	]);
 });
 
 add_filter('the_post', function($post) {
 	if (is_admin()) return;
-	if ($post->post_type !== "kritter_event") return;
+	if ($post->post_type !== \Kritter\Calendar::EVENT_POST_TYPE) return;
 
 	$post->event = new \Kritter\Calendar\Event($post->ID);
 });
+
+// FIX gutenberg meta_box_cb for taxonomies
+add_filter('rest_prepare_taxonomy', function($response, $taxonomy, $request) {
+	$kritter_cal_taxonomies = [
+		\Kritter\Calendar::EVENT_PERFORMER_TAX,
+		\Kritter\Calendar::EVENT_SPONSOR_TAX,
+		\Kritter\Calendar::EVENT_SPONSOR_TAX,
+		\Kritter\Calendar::EVENT_ORGANIZER_TAX,
+		\Kritter\Calendar::EVENT_FUNDER_TAX,
+	];
+
+	if (!in_array($taxonomy->name, $kritter_cal_taxonomies)) return $response;
+
+	$context = !empty($request['context']) ? $request['context'] : 'view';
+
+	// Context is edit in the editor
+	if( $context === 'edit' && $taxonomy->meta_box_cb === false) {
+		$data_response = $response->get_data();
+		$data_response['visibility']['show_ui'] = false;
+		$response->set_data( $data_response );
+	}
+
+	return $response;
+}, 10, 3);
 
 return;
 

@@ -2,10 +2,12 @@
 
 namespace Kritter\Calendar;
 
+use Kritter\Calendar\Maps\OpenStreetMap;
+
 class Venue extends Settings
 {
 	// @var int
-	protected $post_id;
+	public $post_id;
 
 	// @var str
 	public $title;
@@ -14,7 +16,7 @@ class Venue extends Settings
 	protected $address;
 
 	// @var array
-	protected $map;
+	public $map;
 
 	// @var array
 	protected $contact;
@@ -26,19 +28,30 @@ class Venue extends Settings
 		$this->title = get_the_title($post_id);
 
 		$this->address = get_field('address', $post_id);
-		$this->map = get_field('map', $post_id);
-		dd($this->map);
+		$this->map = new OpenStreetMap($post_id);
 		$this->contact = get_field('contact', $post_id);
 	}
 
+	// TODO
+	// either
+	// street() method
+	// address() method
+	// filter with named parameters
 	public function __get($var): string
 	{
-		if (isset($this->address[$var]))
+		if (isset($this->address[$var]) && $this->address[$var] !== "")
 			return $this->address[$var];
+
+		elseif (isset($this->contact[$var]))
+			return $this->contact[$var];
+
+		if ($var == "description")
+			return get_the_excerpt($this->post_id);
 
 		return (string) $this->$var;
 	}
 
+	// TODO check map
 	public function __toString(): string
 	{
 		$str_arr = [
@@ -46,7 +59,8 @@ class Venue extends Settings
 			$this->address['street'],
 			"{$this->address['city']}",
 			$this->address['state'],
-			$this->address['postal']];
+			$this->address['post_code']
+		];
 
 		return implode(" ", $str_arr);
 	}
