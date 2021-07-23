@@ -22,7 +22,7 @@ class MonthlyDays extends Recurrence
 
 	private function setMonthDays(): void
 	{
-		$days = get_field('recurrence_meta_month_days', $this->post_id);
+		$days = get_field('schedule_meta_month_days', $this->post_id);
 
 		array_walk($days, function(&$day, $key) {
 			array_walk($day, function(&$item, $k) {

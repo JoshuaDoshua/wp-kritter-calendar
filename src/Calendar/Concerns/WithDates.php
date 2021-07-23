@@ -5,7 +5,7 @@ namespace Kritter\Calendar\Concerns;
 use Carbon\Carbon;
 use Kritter\Calendar;
 
-trait HandlesDates
+trait WithDates
 {
 	// @var float
 	protected $tz;

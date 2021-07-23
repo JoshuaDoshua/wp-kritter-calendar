@@ -4,7 +4,7 @@ namespace Kritter\Calendar\Recurrences;
 
 use Carbon\Carbon;
 
-use Kritter\Calendar\Calendar;
+use Kritter\Calendar;
 
 class MonthlyDates extends Recurrence
 {
@@ -22,7 +22,7 @@ class MonthlyDates extends Recurrence
 
 	public function setDates(): void
 	{
-		$dates = get_field('recurrence_meta_month_dates', $this->post_id);
+		$dates = get_field('schedule_meta_month_dates', $this->post_id);
 
 		array_walk($dates, function(&$item) {
 			$item = (int) $item['date'];

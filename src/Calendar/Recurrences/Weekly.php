@@ -20,7 +20,7 @@ class Weekly extends Recurrence
 
 	private function setDays(int $post_id): void
 	{
-		$days = get_field('recurrence_meta_week_days', $post_id);
+		$days = get_field('schedule_meta_week_days', $post_id);
 		$this->days = array_map(function($day) {
 			return \Kritter\Calendar\Calendar::WEEKDAYS[intval($day)];
 		}, $days);

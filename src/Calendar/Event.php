@@ -5,11 +5,11 @@ namespace Kritter\Calendar;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Kritter\Calendar\Schedule;
-use Kritter\Calendar\Concerns\HandlesDates;
+use Kritter\Calendar\Concerns\WithDates;
 
 class Event
 {
-	use HandlesDates;
+	use WithDates;
 
 	// @var int
 	public $post_id;
@@ -30,8 +30,9 @@ class Event
 	public $hide_end_time;
 
 	// @var Carbon\CarbonInterval
-	protected $interval;
+	private $length;
 
+	// TODO: ??
 	public $type;
 
 	// @var \Kritter\Calendar\Venue 
@@ -59,7 +60,8 @@ class Event
 
 		// so ugly, but need to handle 24 hrs & isSameDay together somehow
 		// and Round Carbon method wasnt working
-		$this->interval = $this->is_all_day
+		// maybe...just store the start and the interval
+		$this->length = $this->is_all_day
 			? $this->start->diffAsCarbonInterval($this->end->copy()->addSeconds(1), true)
 			: $this->start->diffAsCarbonInterval($this->end, true);
 
@@ -77,7 +79,7 @@ class Event
 	}
 
 
-	public function __get($var): string
+	public function __get($var)
 	{
 		switch ($var):
 
@@ -98,12 +100,18 @@ class Event
 			case "length":
 				return $this->hide_end_time
 					? false
-					: (string) $this->interval;
+					: (string) $this->length;
 
-			default:
-				return (string) $this->$var;
+			// default:
+			// 	return "";
+				// return (string) $this->$var;
 
 		endswitch; // $var
+
+		throw new \Exception(__CLASS__."::{$var} property is not defined or inaccessible.");
+
+		// because why WOULDNT you make an Error class that isnt throwable
+		// throw new \WP_Error('broke', 'property not defined or accessible');
 	}
 
 	// TODO
@@ -117,9 +125,9 @@ class Event
 	{
 		return $this->end;
 	}
-	public function interval(): CarbonInterval
+	public function length(): CarbonInterval
 	{
-		return $this->interval;
+		return $this->length;
 	}
 
 	public function isMultiDay(): bool

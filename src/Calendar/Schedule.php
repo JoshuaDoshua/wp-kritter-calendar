@@ -3,12 +3,13 @@
 namespace Kritter\Calendar;
 
 use Carbon\Carbon;
-use Kritter\Calendar\Concerns\HandlesDates;
+use Carbon\CarbonPeriod;
+use Kritter\Calendar\Concerns\WithDates;
 use Kritter\Calendar\Recurrences\Recurrence;
 
 class Schedule 
 {
-	use HandlesDates;
+	use WithDates;
 
 	// @var int
 	public $post_id;
@@ -21,10 +22,12 @@ class Schedule
 		$this->post_id = $post_id;
 		$this->recurrence = $this->setRecurrence($recurrence);
 
-		$this->setDates(
-			get_field('recurrence_meta_schedule_start', $post_id),
-			get_field('recurrence_meta_schedule_end', $post_id)
-		);
+		$start = get_field('schedule_meta_start', $post_id);
+		$end = get_field('schedule_meta_end', $post_id);
+
+		$this->setDates($start, $end);
+		$this->period = CarbonPeriod::between($start, $end);
+
 		$this->setTimes();
 	}
 
@@ -71,6 +74,15 @@ class Schedule
 	public function end(): Carbon
 	{
 		return $this->end;
+	}
+
+	public function doStuffWithFilter(): void
+	{
+		// set filter
+		$weekendFilter = function ($date) {
+			return $date->isWeekend();
+		};
+		$this->period->filter($weekendFilter);
 	}
 
 	// __toString

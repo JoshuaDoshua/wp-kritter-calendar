@@ -17,7 +17,16 @@ class Recurrence
 	{
 		$this->post_id = $post_id;
 
-		$this->frequency = (int) get_field('recurrence_meta_frequency', $post_id);
+		$this->frequency = (int) get_field('schedule_meta_frequency', $post_id);
+
+		// TODO
+		// do CarbonPeriod in Schedule, pull from here
+		// inclusive/excludsive start/end TODO use this to fix Schedule
+		// schedule extends CarbonPeriod?
+		// should i just use carbon period for...everything?
+		// filter
+		// recurrence
+		// if hasFilter(method)
 	}
 
 	public function getSummary(): string
